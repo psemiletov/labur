@@ -1,2 +1,4 @@
 # labur
-Labyrinth of  Bureaucracy
+Labyrinth of  Bureaucracy | Лабиринт бюрократии
+
+The arcade game. Аркадная игра
