@@ -1,0 +1,12 @@
+import glob
+import os
+
+env = Environment()
+SOURCES = glob.glob('*.cpp')
+env.Append(CCFLAGS = ['-g', '-Wall'])
+env.Append(LIBS = ['mingw32', 'SDLMain', 'SDL', 'SDL_image', 'SDL_mixer', 'SDL_ttf'])
+env.MergeFlags('-mwindows') 
+env.MergeFlags('-I/usr/local/include/SDL -D_GNU_SOURCE=1 -Dmain=SDL_main')
+env.Program(target = 'game', source = SOURCES)
+
+#env.Install(dir = "/usr/local/bin", source = hello)
