@@ -375,6 +375,12 @@ void CGameObject::CGameObject::move()
        }
     }
 
+   if (rect.y < 0)
+      rect.y++;
+
+   if (rect.x < 0)
+      rect.x++;
+
 }
 
 
@@ -463,8 +469,6 @@ CGameObject* CGameObject::create_copy (CLevel *lvl)
 }
 
 
-
-
 inline bool rect_in_view (SDL_Rect view, SDL_Rect rect)
 {
   bool result = false;
@@ -480,10 +484,13 @@ inline bool rect_in_view (SDL_Rect view, SDL_Rect rect)
 }
 
 
-
 void CHero::move()
 {
   //cout << "CHero::move()" << endl;
+
+
+  cout << "x = " << rect.x << endl;
+        cout << "y = " << rect.y << endl;
 
   if (dir_x != EDirection_None)
      {
@@ -495,6 +502,9 @@ void CHero::move()
               if (dir_x == EDirection_Right)
                 rect.x++;
          }
+
+   
+
      }
  
   if (dir_y != EDirection_None)
@@ -507,9 +517,17 @@ void CHero::move()
              if (dir_y == EDirection_Down && rect.y < (screen_height - rect.h))
                  rect.y++;
 
-        //cout << "y = " << rect.y << endl;
        }
     }
+
+
+   if (rect.y < 0)
+      rect.y++;
+
+   if (rect.x < 0)
+      rect.x++;
+
+
 }
 
 

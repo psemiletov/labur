@@ -14,13 +14,13 @@ INST_DIR_DATA = INST_PREFIX_DATA + '/y02/data'
 env.Append(CCFLAGS = ['-g', '-Wall', '-std=c++0x'])
 env.Append(CXXFLAGS = ['-g', '-Wall', '-std=c++0x'])
 env.Append(LIBS = ['SDL2', 'SDL2_image', 'SDL2_mixer', 'SDL2_ttf'])
-y2bin = env.Program(target = 'yourik2', source = SOURCES)
+laburbin = env.Program(target = 'labur', source = SOURCES)
 env.MergeFlags('-DNIX=1')
 
 #env.Install(dir = "/usr/local/bin", source = y2bin)
 #env.Install(dir = "/usr/local/share/y2/data", source = GAMEDATA)
 #env.Alias('install', ['/usr/local/bin', '/usr/local/share/y2/data'])
 
-env.Install(dir = INST_DIR_BIN, source = y2bin)
+env.Install(dir = INST_DIR_BIN, source = laburbin)
 env.Install(dir = INST_DIR_DATA, source = GAMEDATA)
 env.Alias('install', [INST_DIR_BIN, INST_DIR_DATA])

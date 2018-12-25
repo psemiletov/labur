@@ -68,7 +68,6 @@ SDL_Texture *load_image_keyed (std::string fname, SDL_Color key)
 }
 
 
-
 string extract_fpath (const string& fname) 
 {
 
