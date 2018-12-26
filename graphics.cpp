@@ -12,12 +12,6 @@
 using namespace std;
 
 
-#ifdef WINDOWS
-#define DIR_SEPARATOR '\\'
-#else
-#define DIR_SEPARATOR '/'
-#endif
-
 int fps;
 int msecs_delay;
 int cycle;
@@ -25,7 +19,6 @@ int cycles_max;
 
 
 SDL_Color color_key;
-
 SDL_Window *screen;
 SDL_Renderer *renderer;
 
@@ -68,20 +61,10 @@ SDL_Texture *load_image_keyed (std::string fname, SDL_Color key)
 }
 
 
-string extract_fpath (const string& fname) 
-{
 
-#ifdef _WIN32
-#endif
 
-   size_t i = fname.rfind (DIR_SEPARATOR, fname.length());
-   if (i != string::npos) {
-      return(fname.substr(0, i) + DIR_SEPARATOR);
-   }
-
-   return("");
-}
-
+//ДОБАВИТЬ, чтобы если имя файла имеет расширение PNG
+//то просто грузить с keyed и скоростью по умолчанию
 
 CSprite::CSprite (std::string fname)
 {
@@ -124,7 +107,7 @@ CSprite::CSprite (std::string fname)
   while (getline (iss, word, ','))
        {
         //cout << word << endl;
-        add_image (extract_fpath (fname) + word, keyed);
+        add_image (file_get_path (fname) + word, keyed);
        }
 
   //cout << "CSprite::CSprite - end: " << fname <<  endl;

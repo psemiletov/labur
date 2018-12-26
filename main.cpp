@@ -36,9 +36,6 @@ int window_height;
 
 extern int fps;
 
-extern int level_x_speed;
-
-
 extern int msecs_delay;
 extern int cycle;
 extern int cycles_max;
@@ -54,7 +51,6 @@ extern SDL_Renderer *renderer;
 extern SDL_Window *screen;
 
 string dir_data;
-//extern string dir_pix;
 extern string dir_fonts;
 extern string dir_game_objects; //obsolete
 
@@ -84,9 +80,6 @@ inline Uint32 time_left()
       return next_time - now;
 }
 
-
-//std::vector <int> tiles;
-//std::vector <CSprite *> sprts;
 
 char *content;
 CSample *sample;
@@ -136,8 +129,8 @@ void init_sdl()
   bool bdoublebuf = pfile->get_int ("doublebuf", 1);
   bool basyncblit = pfile->get_int ("asyncblit", 1);
 
-  screen_width = pfile->get_int ("screen_width", 800);
-  screen_height = pfile->get_int ("screen_height", 600);
+  screen_width = pfile->get_int ("screen_width", 320);
+  screen_height = pfile->get_int ("screen_height", 240);
 
   window_width = pfile->get_int ("window_width", 800);
   window_height = pfile->get_int ("window_height", 600);
@@ -182,9 +175,7 @@ void init_sdl()
       exit(2);
      }
 
-
   SDL_RenderSetLogicalSize (renderer, 320, 240);
-
 
   joystick = SDL_JoystickOpen (0);
   SDL_JoystickEventState (SDL_ENABLE);

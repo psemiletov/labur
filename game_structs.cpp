@@ -1,9 +1,9 @@
 #include <vector>
 #include <string>
 #include <sstream>
-
-
 #include <fstream>
+
+#include <SDL2/SDL.h>
 
 
 #include "game_structs.h"
@@ -13,14 +13,7 @@
 
 #include "pugixml.hpp"
 
-#include <SDL2/SDL.h>
 
-
-#ifdef WINDOWS
-#define DIR_SEPARATOR '\\'
-#else
-#define DIR_SEPARATOR '/'
-#endif
 
 #define MAX_CHAR_SPRITES 16
 
@@ -37,21 +30,13 @@ int screen_width;
 int screen_height;
 
 
-SDL_Rect area_rect;
-SDL_Rect camera_rect;
-
-
-
 extern int fps;
 extern int cycles_max;
-
-
 extern int cycle;
 
 extern SDL_Renderer *renderer;
 
 CPairFile *pfile;
-
 
 
 
@@ -177,6 +162,10 @@ void CLevel::load_settings (std::string level_name)
 
   width = pf.get_int ("width");
   height = pf.get_int ("height");
+
+
+  screen_width = width;
+  screen_height = height;
 
   level_name = pf.get_string ("level_name");
   next_level = pf.get_string ("next_level");
@@ -336,6 +325,8 @@ CGameObject::CGameObject (CLevel *lvl, string name)
   sprites[EDirection_Right] = lvl->sprites_pool[lvl->map_sprites[dir_EDirection_Right]]->create_copy();
   sprites[EDirection_Up] = lvl->sprites_pool[lvl->map_sprites[dir_EDirection_Up]]->create_copy();
   sprites[EDirection_Down] = lvl->sprites_pool[lvl->map_sprites[dir_EDirection_Down]]->create_copy();
+
+
 
   //dir_x = EXDirection_None;
   //dir_y = EYDirection_None;
@@ -502,9 +493,6 @@ void CHero::move()
               if (dir_x == EDirection_Right)
                 rect.x++;
          }
-
-   
-
      }
  
   if (dir_y != EDirection_None)
@@ -528,6 +516,12 @@ void CHero::move()
       rect.x++;
 
 
+   if ((rect.y + rect.h) > screen_height)
+      rect.y--;
+
+   if ((rect.y + rect.w) > screen_width)
+      rect.x--;
+
 }
 
 
@@ -538,6 +532,8 @@ void CSpace::create_hero()
   hero = (CHero*)level->game_objects_pool[idx]->create_copy (level);
   if (! hero)
      return;
+
+ 
 
   cout << "CSpace::create_hero() = ok" << endl;
 }
@@ -661,17 +657,17 @@ void CSpace::load_level (string lvl_name)
 
   level = new CLevel (lvl_name, LEVELS_DIR);
 
-  area_rect.x = 0;
-  area_rect.y = 0;
+  //area_rect.x = 0;
+//  area_rect.y = 0;
 
-  area_rect.w = level->width;
-  area_rect.h = level->height;
+  //area_rect.w = level->width;
+//  area_rect.h = level->height;
 
-  camera_rect.x = 0;
-  camera_rect.y = 0;
+  //camera_rect.x = 0;
+//  camera_rect.y = 0;
 
-  camera_rect.h = screen_height;
-  camera_rect.w = screen_width;
+  //camera_rect.h = screen_height;
+//  camera_rect.w = screen_width;
 
   create_hero();
 
@@ -720,13 +716,6 @@ void CSpace::prepare_space()
 
   if (hero)
      {
-      if (level->level_goal == ECT_LIMIT_POS_X)
-         if ((hero->rect.x) >= level->width)
-           {
-            cout << "hero is out of level size" << endl;
-            load_level (level->next_level);
-            return;
-           }
       }
 
 
