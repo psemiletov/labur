@@ -116,18 +116,9 @@ SDL_Texture *load_image_keyed (std::string fname, Uint32 key);
 
 
 int string_to_direction (std::string dir);
-
-//bool sdl_rects_intersects (const SDL_Rect *a, const SDL_Rect * b);
-//Uint32 string_color_to_sdl_color (std::string scolor);
-
 void string_color_to_sdl_color (std::string scolor, SDL_Color *color);
-//Uint32 string_color_to_Uint32_color (std::string scolor);
-
 Uint32 SDL_Color_to_Uint32_color (SDL_Surface *surface, SDL_Color color);
-
-
 bool sdl_rect_intersects_with (const SDL_Rect *one, const SDL_Rect *other);
-
 
 
 #endif

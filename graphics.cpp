@@ -73,8 +73,10 @@ CSprite::CSprite (std::string fname)
   current_frame = 0;
   cycles_per_frame = 1;
   empty = true;
-
   original = true;
+  keyed = 0;
+
+  int speed = 2;
 
   if (fname.empty())
      {
@@ -92,13 +94,18 @@ CSprite::CSprite (std::string fname)
 
   cout << "creating sprite: " << fname << endl;
 
-  CPairFile pfile (fname);
-  int speed = pfile.get_int ("speed", 2);
-  set_fps (speed);
+  if (file_get_ext (fname) == "png")
+     { 
+      set_fps (speed);
+      add_image (fname, keyed);
+      return;
+     }
 
+  CPairFile pfile (fname);
+  speed = pfile.get_int ("speed", 2);
+  set_fps (speed);
   keyed = pfile.get_int ("keyed", 0);
 
-  //cout << "cycles_per_frame = " << cycles_per_frame << endl;
 
   string fnames = pfile.get_string ("files", "null");
 
@@ -106,7 +113,6 @@ CSprite::CSprite (std::string fname)
   string word;
   while (getline (iss, word, ','))
        {
-        //cout << word << endl;
         add_image (file_get_path (fname) + word, keyed);
        }
 

@@ -85,8 +85,36 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
        lvl->tile_height = attr.as_int();   
        attr = node.attribute ("tilewidth");   
        lvl->tile_width = attr.as_int();   
+     }
+
+
+  if (strcmp (node.name(), "objectgroup") == 0)
+     {
+      //load objects
+
+     std::cout << "!!!!!!!!!!!!!!!!!!!! LOAD OBJECTS !!!!!!!!!!!!!!!!!!!!" << endl;    
+
+//      for (pugi::xml_node obj: node.children("object"))
+       for (pugi::xml_node obj: node.children("object"))
+        {
+         std::cout << "obj.name:" << obj.name() << endl;
+         
+         for (pugi::xml_node child: obj.children())
+          {
+           std::cout << "child.name:" << child.name() << endl;
+          }
+        }
+
+//    for (pugi::xml_node child: tool.children())
+  //  {
+    //    std::cout << ", child " << child.name();
+//    }
+
+  //  std::cout << std::endl;
+
 
      }
+
 
   if (strcmp (node.name(), "layer") == 0)
      {
@@ -480,8 +508,8 @@ void CHero::move()
   //cout << "CHero::move()" << endl;
 
 
-  cout << "x = " << rect.x << endl;
-        cout << "y = " << rect.y << endl;
+//  cout << "x = " << rect.x << endl;
+  //      cout << "y = " << rect.y << endl;
 
   if (dir_x != EDirection_None)
      {
