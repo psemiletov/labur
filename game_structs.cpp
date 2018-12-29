@@ -125,9 +125,17 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
       std::string line;
 
       int row = 0; 
+     
+//csv начинается с перевода строки, поэтому пропускаем при разборе
+      //нулевой ряд, он пустой
+
+      std::getline (data_stream, line, '\n');
 
       while (std::getline (data_stream, line, '\n')) 
             {
+
+             cout << "ROW: " << row << endl;
+
              std::stringstream line_stream (line);
              std::string str_col;
 
@@ -138,12 +146,19 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
                     int colval = std::stoi (str_col);  
                   //  *(lvl->map_tiles + (row * lvl->map_width + col)) = colval; 
                     lvl->map_tiles[row][col] = colval;
+                    cout << colval << ",";
                     col++; 
                    }
+
+
+             cout << endl;
 
               row++;
               if (row == lvl->map_height)
                  break; 
+
+
+
              }
 
      }
@@ -796,12 +811,14 @@ void CSpace::render_space()
 
 
    for (int row = 0; row < level->map_height; row++)
+       {
+     //  cout << "ROW: " << row << endl;
+    
        for (int col = 0; col < level->map_width; col++)
            {
             int id = level->map_tiles[row][col];
             //int id = *(level->map_tiles + (row * level->width + col));
 
-            cout << "ROW: " << row << endl;
     
             CSprite *sprite = level->sprites_pool[id];
             if (sprite)
@@ -812,16 +829,14 @@ void CSpace::render_space()
                  SDL_Rect dstrect; 
                  dstrect.w = level->tile_width;
                  dstrect.h = level->tile_height;
-                 dstrect.y = level->tile_height * row - level->tile_height;
+                 dstrect.y = level->tile_height * row;
                  dstrect.x = level->tile_width * col;
   
                  if (tile)
                      SDL_RenderCopy (renderer, tile, &tilerect, &dstrect);
                  }
-
-  
            }
-
+         }
 
 //рисуем героя
   hero->move();
