@@ -188,19 +188,19 @@ void CLevel::load_settings (std::string level_name)
 
 //  cout << "level_goal = " << (int)level_goal << endl;
 
-  width = pf.get_int ("width");
-  height = pf.get_int ("height");
+//  width = pf.get_int ("width");
+//  height = pf.get_int ("height");
 
 
-  screen_width = width;
-  screen_height = height;
+  screen_width = pf.get_int ("width");
+  screen_height = pf.get_int ("height");
 
   level_name = pf.get_string ("level_name");
   next_level = pf.get_string ("next_level");
 
   fname_tmx = pf.get_string ("fname_tmx");
 
-  level_goal_pos_x = pf.get_int ("level_goal_pos_x");
+ // level_goal_pos_x = pf.get_int ("level_goal_pos_x");
 
 
   //cout << "level_name = " << level_name << endl;
@@ -308,8 +308,8 @@ CGameObject::CGameObject (CLevel *lvl, string name)
   set_speed (pf.get_int ("speed", 30));
   rect.x = pf.get_int ("x", 0);
   rect.y = pf.get_int ("y", 0);
-  rect.w = pf.get_int ("w", 128);
-  rect.h = pf.get_int ("h", 128);
+  rect.w = pf.get_int ("w", 32);
+  rect.h = pf.get_int ("h", 32);
 
   missilename = pf.get_string ("missilename");
   speed_mult = pf.get_int ("speed_mult", 1);
@@ -354,13 +354,10 @@ CGameObject::CGameObject (CLevel *lvl, string name)
   sprites[EDirection_Up] = lvl->sprites_pool[lvl->map_sprites[dir_EDirection_Up]]->create_copy();
   sprites[EDirection_Down] = lvl->sprites_pool[lvl->map_sprites[dir_EDirection_Down]]->create_copy();
 
-
-
   //dir_x = EXDirection_None;
   //dir_y = EYDirection_None;
 
   cout << "CGameObject::CGameObject end" << endl;
-
 }
 
 
@@ -685,18 +682,6 @@ void CSpace::load_level (string lvl_name)
 
   level = new CLevel (lvl_name, LEVELS_DIR);
 
-  //area_rect.x = 0;
-//  area_rect.y = 0;
-
-  //area_rect.w = level->width;
-//  area_rect.h = level->height;
-
-  //camera_rect.x = 0;
-//  camera_rect.y = 0;
-
-  //camera_rect.h = screen_height;
-//  camera_rect.w = screen_width;
-
   create_hero();
 
   cout << "CSpace::load_level - end" << endl;
@@ -816,7 +801,7 @@ void CSpace::render_space()
             int id = level->map_tiles[row][col];
             //int id = *(level->map_tiles + (row * level->width + col));
 
-//            cout << "ID: " << id << endl;
+            cout << "ROW: " << row << endl;
     
             CSprite *sprite = level->sprites_pool[id];
             if (sprite)

@@ -127,9 +127,9 @@ class CLevel
 
   string next_level;
 
-  int level_goal_pos_x;
-  int width;
-  int height;
+ // int level_goal_pos_x;
+ // int width;
+//  int height;
 
   int map_width;
   int map_height;

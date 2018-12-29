@@ -240,10 +240,10 @@ int main (int argc, char *argv[])
 
 
   SDL_Color temp_text_color = {255,0,0};
-  CTextItem *temp_text_item = new CTextItem ("DejaVuSerif.ttf", 1, 50, "панкамхой", temp_text_color, 24);
+  CTextItem *temp_text_item = new CTextItem ("DejaVuSerif.ttf", 1, 50, "панкамхой", temp_text_color, 22);
 
   SDL_Color temp_text_color2 = {0,0,255};
-  CTextItem *temp_text_item2 = new CTextItem ("DejaVuSerif.ttf", 64, 80, "кролик Юрик 2 демо", temp_text_color2, 32);
+  CTextItem *temp_text_item2 = new CTextItem ("DejaVuSerif.ttf", 1, 80, "ЛАБИРИНТ БЮРОКРАТИИ", temp_text_color2, 22);
 
 
   space->texts->items[0] = temp_text_item;
