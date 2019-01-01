@@ -92,26 +92,51 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
      {
       //load objects
 
-     std::cout << "!!!!!!!!!!!!!!!!!!!! LOAD OBJECTS !!!!!!!!!!!!!!!!!!!!" << endl;    
+      std::cout << "!!!!!!!!!!!!!!!!!!!! LOAD OBJECTS !!!!!!!!!!!!!!!!!!!!" << endl;    
 
-//      for (pugi::xml_node obj: node.children("object"))
-       for (pugi::xml_node obj: node.children("object"))
-        {
-         std::cout << "obj.name:" << obj.name() << endl;
-         
-         for (pugi::xml_node child: obj.children())
+      for (pugi::xml_node obj: node.children("object"))
           {
-           std::cout << "child.name:" << child.name() << endl;
-          }
+           std::cout << "obj.name:" << obj.name() << endl;
+         
+           for (pugi::xml_node child: obj.children())
+               {
+            //   std::cout << "child.name:" << child.name() << endl;
+               }
+
+           pugi::xml_attribute attr = obj.attribute ("type"); 
+           std::cout << "attr.value():" << attr.value() << endl;
+ 
+           string atr = attr.value();    
+
+           if (atr == "text")
+           
+           //if (strcmp (attr.value(), "text" == 0))
+              {
+               std::cout << "TEXT!!!!" << attr.name() << "=" << attr.value() << endl;
+              }
+ 
+
+           if (atr == "wall")
+              {
+               std::cout << "WALL!!!!" << attr.name() << "=" << attr.value() << endl;
+ 
+               SDL_Rect *r = new SDL_Rect;
+ 
+               r->x = node.attribute ("x").as_int(); 
+               r->y = node.attribute ("y").as_int(); 
+               r->w = node.attribute ("width").as_int(); 
+               r->h = node.attribute ("height").as_int(); 
+
+               lvl->walls.push_back (r);
+
+              }
+
+
+//           for (pugi::xml_attribute attr: obj.attributes())
+    //          {
+      //          std::cout << " " << attr.name() << "=" << attr.value() << endl;
+        //     }  
         }
-
-//    for (pugi::xml_node child: tool.children())
-  //  {
-    //    std::cout << ", child " << child.name();
-//    }
-
-  //  std::cout << std::endl;
-
 
      }
 
@@ -149,7 +174,6 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
                     cout << colval << ",";
                     col++; 
                    }
-
 
              cout << endl;
 
@@ -300,6 +324,10 @@ CLevel::~CLevel()
   if (game_objects.size() > 0)
      for (size_t i = 0; i < game_objects.size(); i++)
          delete game_objects[i];
+
+  if (walls.size() > 0)
+     for (size_t i = 0; i < walls.size(); i++)
+         delete walls[i];
 
 
   cout << "~CLevel() - end" << endl;

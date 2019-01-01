@@ -24,11 +24,12 @@ enum ELevelGoal
 enum ECollisionType
     {
      ECT_NONE = 0,
-     ECT_ADD_LIFE, //1
-     ECT_SUBTRACT_LIFE, //2
-     ECT_FALL, //3
-     ECT_BLOW, //4
-     ECT_KILL //5
+     ECT_NOMOVE, //1
+     ECT_ADD_LIFE, //2
+     ECT_SUBTRACT_LIFE, //3
+     ECT_FALL, //4
+     ECT_BLOW, //5
+     ECT_KILL //6
     };
 
 
@@ -43,7 +44,6 @@ enum EMovementType
     };
 
 
-
 class CCollision
 {
 public:
@@ -53,6 +53,7 @@ public:
 
   CCollision() {type = ECT_NONE; value = 0;};
 };
+
 
 class CLevel;
 
@@ -87,7 +88,6 @@ class CGameObject
 
   void set_speed (int a_speed);
 
-
   CGameObject* create_copy (CLevel *lvl);
 };
 
@@ -107,6 +107,8 @@ class CLevel
   std::vector <CGameObject *> game_objects_pool; //used for "cloning" objects from there
   std::vector <CSprite *> sprites_pool;
   std::vector <CGameObject *> game_objects; //not pool
+  std::vector <SDL_Rect *> walls;
+
 
   map <string, int> map_sprites;
   map <string, int> map_game_objects;
