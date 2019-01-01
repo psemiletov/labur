@@ -61,6 +61,8 @@ class CGameObject
 {
  public:
 
+  CLevel *level; //uplink
+
   std::vector <CSprite *> sprites;
 
   string objname;

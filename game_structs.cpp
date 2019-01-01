@@ -122,12 +122,14 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
  
                SDL_Rect *r = new SDL_Rect;
  
-               r->x = node.attribute ("x").as_int(); 
-               r->y = node.attribute ("y").as_int(); 
-               r->w = node.attribute ("width").as_int(); 
-               r->h = node.attribute ("height").as_int(); 
+               r->x = obj.attribute ("x").as_int(); 
+               r->y = obj.attribute ("y").as_int(); 
+               r->w = obj.attribute ("width").as_int(); 
+               r->h = obj.attribute ("height").as_int(); 
 
                lvl->walls.push_back (r);
+
+               cout << "rect-> x:" << r->x << " y:" << r->y << " w: " << r->w << " h:" << r->h << endl; 
 
               }
 
@@ -338,6 +340,8 @@ CLevel::~CLevel()
 CGameObject::CGameObject (CLevel *lvl, string name)
 {
   cout << "CGameObject::CGameObject start: " << name << endl;
+
+  level = lvl;
 
   sprites.resize (MAX_CHAR_SPRITES, nullptr);
 
@@ -551,15 +555,22 @@ void CHero::move()
 //  cout << "x = " << rect.x << endl;
   //      cout << "y = " << rect.y << endl;
 
+
+  SDL_Rect t;
+  t.x = rect.x;
+  t.y = rect.y;
+  t.h = rect.h;
+  t.w = rect.w;
+
   if (dir_x != EDirection_None)
      {
       if (cycle % speed == 0)
          {
           if (dir_x == EDirection_Left)
-             rect.x--;
+             t.x--;
           else
               if (dir_x == EDirection_Right)
-                rect.x++;
+                t.x++;
          }
      }
  
@@ -567,28 +578,45 @@ void CHero::move()
      {
       if (cycle % speed == 0)
         {
-         if (dir_y == EDirection_Up && rect.y > 0)
-            rect.y--;
+         if (dir_y == EDirection_Up && t.y > 0)
+            t.y--;
          else
-             if (dir_y == EDirection_Down && rect.y < (screen_height - rect.h))
-                 rect.y++;
+             if (dir_y == EDirection_Down && t.y < (screen_height - t.h))
+                 t.y++;
 
        }
     }
 
-
-   if (rect.y < 0)
-      rect.y++;
-
-   if (rect.x < 0)
-      rect.x++;
+//прогон по всем walls с sdl_rect_intersects_with
 
 
-   if ((rect.y + rect.h) > screen_height)
-      rect.y--;
+  if (level->walls.size() > 0)
+     for (size_t i = 0; i < level->walls.size(); i++)
+         {
+          if (sdl_rect_intersects_with (&t, level->walls[i]))
+          //   cout << "INTERSECT WITH OBJ: " << i << endl;  
+            return;
+        }
+    //     delete walls[i];
 
-   if ((rect.y + rect.w) > screen_width)
-      rect.x--;
+
+
+   if (t.y < 0)
+      t.y++;
+
+   if (t.x < 0)
+      t.x++;
+
+
+   if ((t.y + t.h) > screen_height)
+      t.y--;
+
+   if ((t.y + t.w) > screen_width)
+      t.x--;
+
+
+  rect.x = t.x;
+  rect.y = t.y;
 
 }
 
