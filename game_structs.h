@@ -21,6 +21,17 @@ enum ELevelGoal
     };
 
 
+enum EObjType
+{
+  OBJTYPE_UTIL = 0,
+  OBJTYPE_PORTAL, //1
+  OBJTYPE_LEVELITEM, //2
+  OBJTYPE_ENEMY, //3
+  OBJTYPE_POWERUP, 
+  OBJTYPE_WALL,//5
+};
+
+
 enum ECollisionType
     {
      ECT_NONE = 0,
@@ -29,7 +40,8 @@ enum ECollisionType
      ECT_SUBTRACT_LIFE, //3
      ECT_FALL, //4
      ECT_BLOW, //5
-     ECT_KILL //6
+     ECT_KILL, //6
+     ECT_PORTAL //7
     };
 
 
@@ -67,6 +79,7 @@ class CGameObject
 
   string objname;
   string missilename;
+  string linkedmap; //для портала
 
   int can_shot; //может ли стрелять?
   int shot_freq; //как часть? в чем выразить - выстрелы в секунду, или выстрел на таком-то цикле?
@@ -85,6 +98,7 @@ class CGameObject
   CCollision collision; //действие, которое оказывает этот объект при столкновении с другим объектом
 
   CGameObject (CLevel *lvl, string name);
+  CGameObject (CLevel *lvl); //для "невидимого" объекта вроде портала
 
   void move();
 
@@ -109,8 +123,9 @@ class CLevel
   std::vector <CGameObject *> game_objects_pool; //used for "cloning" objects from there
   std::vector <CSprite *> sprites_pool;
   std::vector <CGameObject *> game_objects; //not pool
-  std::vector <SDL_Rect *> walls;
+  std::vector <CGameObject *> map_objects; //not pool
 
+  std::vector <SDL_Rect *> walls;
 
   map <string, int> map_sprites;
   map <string, int> map_game_objects;

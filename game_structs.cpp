@@ -116,7 +116,7 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
               }
  
 
-           if (atr == "wall")
+           if (atr == "OBJTYPE_WALL")
               {
                std::cout << "WALL!!!!" << attr.name() << "=" << attr.value() << endl;
  
@@ -130,9 +130,25 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
                lvl->walls.push_back (r);
 
                cout << "rect-> x:" << r->x << " y:" << r->y << " w: " << r->w << " h:" << r->h << endl; 
-
               }
 
+  
+           if (atr == "OBJTYPE_PORTAL")
+              {
+               std::cout << "PORTAL!!!!" << attr.name() << "=" << attr.value() << endl;
+
+               CGameObject *o = new CGameObject (lvl);
+               o->object_type = OBJTYPE_PORTAL;
+ 
+               o->rect.x = obj.attribute ("x").as_int(); 
+               o->rect.y = obj.attribute ("y").as_int(); 
+               o->rect.w = obj.attribute ("width").as_int(); 
+               o->rect.h = obj.attribute ("height").as_int(); 
+
+               lvl->map_objects.push_back (o);
+
+//               cout << "rect-> x:" << r->x << " y:" << r->y << " w: " << r->w << " h:" << r->h << endl; 
+              }
 
 //           for (pugi::xml_attribute attr: obj.attributes())
     //          {
@@ -161,7 +177,7 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
       while (std::getline (data_stream, line, '\n')) 
             {
 
-             cout << "ROW: " << row << endl;
+  //           cout << "ROW: " << row << endl;
 
              std::stringstream line_stream (line);
              std::string str_col;
@@ -177,14 +193,11 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
                     col++; 
                    }
 
-             cout << endl;
+//             cout << endl;
 
               row++;
               if (row == lvl->map_height)
                  break; 
-
-
-
              }
 
      }
@@ -296,8 +309,14 @@ void CLevel::reset_map_objects()
      for (size_t i = 0; i < walls.size(); i++)
          delete walls[i];
 
+  if (map_objects.size() > 0)
+     for (size_t i = 0; i < map_objects.size(); i++)
+         delete map_objects[i];
+
+
   game_objects.clear();
   walls.clear();
+  map_objects.clear();
 
 }
 
@@ -379,7 +398,7 @@ CGameObject::CGameObject (CLevel *lvl, string name)
 
   //cout << "shot_freq: " << shot_freq <<  endl;
 
-
+  object_type = (EObjType)pf.get_int ("object_type", 0);
   movement_type = (EMovementType)pf.get_int ("movement_type", 0);
   collision.type = (ECollisionType)pf.get_int ("collision.type", 0);
   collision.value = pf.get_int ("collision.value", 0);
@@ -413,6 +432,26 @@ CGameObject::CGameObject (CLevel *lvl, string name)
 
   //dir_x = EXDirection_None;
   //dir_y = EYDirection_None;
+
+  cout << "CGameObject::CGameObject end" << endl;
+}
+
+
+
+CGameObject::CGameObject (CLevel *lvl)
+{
+//  cout << "CGameObject::CGameObject start: " << name << endl;
+
+  level = lvl;
+
+  sprites.resize (MAX_CHAR_SPRITES, nullptr);
+
+  
+  object_type = 0;
+
+
+  objname = "util";
+//  name = "util";
 
   cout << "CGameObject::CGameObject end" << endl;
 }
@@ -645,8 +684,11 @@ void CSpace::create_hero()
 }
 
 
-//load objects
-//ЗАМЕНИТЬ, БУДЕТ ИЗ ФАЙЛА КАРТЫ
+/*load objects
+ЗАГРУЖАЕТ ОБЪЕКТЫ, КОТОРЫЕ НЕ ЗАГРУЖАЮТСЯ С КАРТЫ:
+герой, пули, и т.д. 
+
+*/
 void CLevel::load_game_objects (std::string level_name)
 {
   cout << "CLevel::load_game_objects\n";
