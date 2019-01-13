@@ -199,6 +199,8 @@ void CLevel::load_tmx (std::string fname)
 {
   std::cout << "CLevel::load_tmx - START" << std::endl;
 
+  reset_map_objects();
+
   std::string filename = level_path + fname; 
 
   pugi::xml_document doc;
@@ -284,6 +286,22 @@ void CLevel::load_game_objects_pool (std::string level_name)
 }
 
 
+void CLevel::reset_map_objects()
+{
+  if (game_objects.size() > 0)
+     for (size_t i = 0; i < game_objects.size(); i++)
+         delete game_objects[i];
+
+  if (walls.size() > 0)
+     for (size_t i = 0; i < walls.size(); i++)
+         delete walls[i];
+
+  game_objects.clear();
+  walls.clear();
+
+}
+
+
 CLevel::CLevel (std::string level_name, std::string dir_lvls)
 {
   cout << "CLevel::CLevel - start" << endl;
@@ -321,16 +339,8 @@ CLevel::~CLevel()
   if (game_objects_pool.size() > 0)
      for (size_t i = 0; i < game_objects_pool.size(); i++)
          delete game_objects_pool[i];
-
  
-  if (game_objects.size() > 0)
-     for (size_t i = 0; i < game_objects.size(); i++)
-         delete game_objects[i];
-
-  if (walls.size() > 0)
-     for (size_t i = 0; i < walls.size(); i++)
-         delete walls[i];
-
+  reset_map_objects();
 
   cout << "~CLevel() - end" << endl;
 }

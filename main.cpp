@@ -65,7 +65,7 @@ int sdl_screen_flags;
 Uint32 ticks;
 Uint32 next_time;
 
-SDL_Joystick *joystick;
+SDL_Joystick *joystick = NULL;
 
 
 inline Uint32 time_left()
@@ -146,7 +146,7 @@ void init_sdl()
 
   SDL_Init (SDL_INIT_EVERYTHING);
 
-  screen = SDL_CreateWindow ("Laby",
+  screen = SDL_CreateWindow ("Labur",
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
                               window_width, window_height,
@@ -221,7 +221,7 @@ Uint32 currentTime = 0;
 Uint32 before_cycle = 0;
 Uint32 after_cycle = 0;
 
-
+const int JOYSTICK_DEAD_ZONE = 8000;
 
 
 int main (int argc, char *argv[])
@@ -281,6 +281,44 @@ int main (int argc, char *argv[])
                     {
                      case SDL_JOYAXISMOTION:
                          {
+                          if (keyevent.jaxis.which == 0 )
+                            {
+                             //X axis motion
+                             if (keyevent.jaxis.axis == 0 )
+                                {
+                                 //Left of dead zone
+                                 if (keyevent.jaxis.value < -JOYSTICK_DEAD_ZONE )
+                                {
+                                         space->hero->dir_x = EDirection_Left;
+                                }
+                                //Right of dead zone
+                                else if(keyevent.jaxis.value > JOYSTICK_DEAD_ZONE )
+                                {
+                                    space->hero->dir_x = EDirection_Right;
+                                }
+                                else
+                                {
+                                  space->hero->dir_x = EDirection_None;
+                                }
+                            }
+
+  //Y axis motion
+                            else if(keyevent.jaxis.axis == 1 )
+                            {
+                                //Below of dead zone
+                                if(keyevent.jaxis.value < -JOYSTICK_DEAD_ZONE )
+                                               space->hero->dir_y = EDirection_Up;
+                                //Above of dead zone
+                                else if(keyevent.jaxis.value > JOYSTICK_DEAD_ZONE )
+                                               space->hero->dir_y = EDirection_Down;
+                                else
+                                        space->hero->dir_y = EDirection_None;
+                            }
+
+
+
+                              } 
+
                           //keyevent.jaxis.axis
                           //keyevent.jaxis.value
                           break;

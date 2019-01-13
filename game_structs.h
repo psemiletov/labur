@@ -148,7 +148,7 @@ class CLevel
   void load_settings (std::string level_name);
 
   void load_game_objects (std::string level_name);
-
+  void reset_map_objects();
 
   CLevel (std::string level_name, std::string dir_lvls);
   ~CLevel();
