@@ -79,7 +79,7 @@ class CGameObject
 
   string objname;
   string missilename;
-  string linkedmap; //для портала
+  string linked_map; //для портала
 
   int can_shot; //может ли стрелять?
   int shot_freq; //как часть? в чем выразить - выстрелы в секунду, или выстрел на таком-то цикле?
@@ -87,6 +87,9 @@ class CGameObject
   int object_type;
   int speed;
   int speed_mult;
+
+  int start_x;
+  int start_y;
 
   EMovementType movement_type;
 
@@ -100,10 +103,10 @@ class CGameObject
   CGameObject (CLevel *lvl, string name);
   CGameObject (CLevel *lvl); //для "невидимого" объекта вроде портала
 
-  virtual ~CGameObject() {}; 
+  //virtual ~CGameObject() {}; 
 
   void move();
-  virtual void check_collision (CGameObject *other); 
+  void check_collision (CGameObject *other); 
  
 
   void set_speed (int a_speed);

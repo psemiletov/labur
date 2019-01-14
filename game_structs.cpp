@@ -145,7 +145,46 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
                o->rect.w = obj.attribute ("width").as_int(); 
                o->rect.h = obj.attribute ("height").as_int(); 
 
+               pugi::xml_node properties = obj.child ("properties");
+
+               if (! properties.empty())  
+                  {
+                   cout << "! EPM " << endl;
+
+                  for (pugi::xml_node prop = properties.child("property"); prop; prop = prop.next_sibling("property"))
+                      {
+                       //std::cout << "prop " << prop.attribute("name").value() << "\n";
+                       string attrname = prop.attribute("name").value();
+                                 
+                       if (attrname == "linked_map") 
+                          o->linked_map = prop.attribute("value").value();   
+ 
+                       if (attrname == "start_x") 
+                          o->start_x = prop.attribute("value").as_int();   
+
+                       if (attrname == "start_y") 
+                          o->start_y = prop.attribute("value").as_int();   
+                      }
+                  }
+
+//               pugi::xml_node property = properties.child ("property");
+
+/*
+
+               pugi::xml_node property = properties.child("property").find_child_by_attribute ("linked_map", "NONE");
+               o->linked_map = property.attribute ("linked_map").as_string();  
+
+               property = obj.child("properties").find_child_by_attribute("start_x", "NONE");
+               o->start_x = property.attribute ("start_x").as_int();  
+               property = obj.child("properties").find_child_by_attribute("start_y", "NONE");
+               o->start_y = property.attribute ("start_y").as_int();  
+
+               cout << "o->linked_map: " << o->linked_map << endl;  
+*/
+                cout << "o->linked_map: " << o->linked_map << endl;
                lvl->map_objects.push_back (o);
+
+               cout << "map_objects.size: " << lvl->map_objects.size() << endl;  
 
 //               cout << "rect-> x:" << r->x << " y:" << r->y << " w: " << r->w << " h:" << r->h << endl; 
               }
@@ -210,7 +249,7 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
 //НЕ ЗАБУДЬ! ПРИ ЧТЕНИИ КАЖДОГО ТАЙЛА НАДО ID+1
 void CLevel::load_tmx (std::string fname)
 {
-  std::cout << "CLevel::load_tmx - START" << std::endl;
+  std::cout << "CLevel::load_tmx - START with " << fname << std::endl;
 
   reset_map_objects();
 
@@ -303,9 +342,9 @@ void CLevel::load_game_objects_pool (std::string level_name)
 
 void CLevel::reset_map_objects()
 {
-  if (game_objects.size() > 0)
-     for (size_t i = 0; i < game_objects.size(); i++)
-         delete game_objects[i];
+//  if (game_objects.size() > 0)
+  //   for (size_t i = 0; i < game_objects.size(); i++)
+    //     delete game_objects[i];
 
   if (walls.size() > 0)
      for (size_t i = 0; i < walls.size(); i++)
@@ -316,7 +355,7 @@ void CLevel::reset_map_objects()
          delete map_objects[i];
 
 
-  game_objects.clear();
+//  game_objects.clear();
   walls.clear();
   map_objects.clear();
 
@@ -361,6 +400,11 @@ CLevel::~CLevel()
      for (size_t i = 0; i < game_objects_pool.size(); i++)
          delete game_objects_pool[i];
  
+  if (game_objects.size() > 0)
+     for (size_t i = 0; i < game_objects.size(); i++)
+         delete game_objects[i];
+
+
   reset_map_objects();
 
   cout << "~CLevel() - end" << endl;
@@ -441,12 +485,20 @@ CGameObject::CGameObject (CLevel *lvl, string name)
 
 void CHero::check_collision (CGameObject *other)
 {
+//  cout << "CHero::check_collision" << endl;
+
+
   if (! sdl_rect_intersects_with (&rect, &other->rect))
      return;
 
   if (other->object_type == OBJTYPE_PORTAL)
      {
-      level->load_tmx (other->linkedmap);
+      cout << "other->linkedmap: " << other->linked_map << endl;
+
+      level->load_tmx (other->linked_map);
+      start_x = other->start_x; 
+      start_y = other->start_y;
+
       //ПЕРЕНЕСТИ ГЕРОЯ В НЕКОЕ НАЧАЛЬНОЕ МЕСТО НА КАРТЕ!!!!
       //МЕСТО НА КАРТЕ ЗАДАТЬ ОБЪЕКТОМ!
 
@@ -874,14 +926,23 @@ void CSpace::prepare_space()
 {
  // if (! hero)
 
-   // cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+ //   cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
         
 
   if (hero)
      {
-      }
 
+ for (size_t i = 0; i < level->map_objects.size(); i++)
+      {
+       CGameObject *obj = level->map_objects[i];
+       if (obj)
+          {
+           hero->check_collision (obj);
+          }
 
+     }
+   }
+ 
  // cout << "OBJECT COLLISIONS/MOVE - START" << endl;
 /*
   for (size_t i = 0; i < level->game_objects.size(); i++)
