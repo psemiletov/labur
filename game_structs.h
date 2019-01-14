@@ -100,7 +100,11 @@ class CGameObject
   CGameObject (CLevel *lvl, string name);
   CGameObject (CLevel *lvl); //для "невидимого" объекта вроде портала
 
+  virtual ~CGameObject() {}; 
+
   void move();
+  virtual void check_collision (CGameObject *other); 
+ 
 
   void set_speed (int a_speed);
 
@@ -113,6 +117,7 @@ class CHero: public CGameObject
  public:
 
   void move();
+  void check_collision (CGameObject *other); 
 };
 
 
@@ -149,6 +154,10 @@ class CLevel
  // int level_goal_pos_x;
  // int width;
 //  int height;
+
+
+  int start_x; //hero initial coords
+  int start_y;
 
   int map_width;
   int map_height;

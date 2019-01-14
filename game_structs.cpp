@@ -247,6 +247,8 @@ void CLevel::load_settings (std::string level_name)
 //  width = pf.get_int ("width");
 //  height = pf.get_int ("height");
 
+  start_x = pf.get_int ("start_x");
+  start_y = pf.get_int ("start_y");
 
   screen_width = pf.get_int ("width");
   screen_height = pf.get_int ("height");
@@ -436,6 +438,30 @@ CGameObject::CGameObject (CLevel *lvl, string name)
   cout << "CGameObject::CGameObject end" << endl;
 }
 
+
+void CHero::check_collision (CGameObject *other)
+{
+  if (! sdl_rect_intersects_with (&rect, &other->rect))
+     return;
+
+  if (other->object_type == OBJTYPE_PORTAL)
+     {
+      level->load_tmx (other->linkedmap);
+      //ПЕРЕНЕСТИ ГЕРОЯ В НЕКОЕ НАЧАЛЬНОЕ МЕСТО НА КАРТЕ!!!!
+      //МЕСТО НА КАРТЕ ЗАДАТЬ ОБЪЕКТОМ!
+
+     } 
+
+} 
+
+
+
+void CGameObject::check_collision (CGameObject *other)
+{
+
+
+}
+ 
 
 
 CGameObject::CGameObject (CLevel *lvl)
@@ -678,7 +704,8 @@ void CSpace::create_hero()
   if (! hero)
      return;
 
- 
+  hero->rect.x = level->start_x;
+  hero->rect.y = level->start_y;
 
   cout << "CSpace::create_hero() = ok" << endl;
 }
