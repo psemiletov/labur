@@ -181,6 +181,9 @@ bool Ctmx_walker::for_each (pugi::xml_node &node)
 
                cout << "o->linked_map: " << o->linked_map << endl;  
 */
+                cout << "o->start_x: " << o->start_x << endl;
+                cout << "o->start_y: " << o->start_y << endl;
+
                 cout << "o->linked_map: " << o->linked_map << endl;
                lvl->map_objects.push_back (o);
 
@@ -493,11 +496,23 @@ void CHero::check_collision (CGameObject *other)
 
   if (other->object_type == OBJTYPE_PORTAL)
      {
+      cout << ">>>>>>>>>>>>> COLLISION OBJTYPE_PORTAL: " << other->linked_map << endl;
+
+
+      rect.x = other->start_x; 
+      rect.y = other->start_y;
+
+      cout << "hero->rect.x: " << rect.x << endl;
+      cout << "hero->rect.y: " << rect.y << endl;
       cout << "other->linkedmap: " << other->linked_map << endl;
 
+     cout << ">>>>>>>>>>>>>"<< endl;
+
+
       level->load_tmx (other->linked_map);
-      start_x = other->start_x; 
-      start_y = other->start_y;
+
+
+
 
       //ПЕРЕНЕСТИ ГЕРОЯ В НЕКОЕ НАЧАЛЬНОЕ МЕСТО НА КАРТЕ!!!!
       //МЕСТО НА КАРТЕ ЗАДАТЬ ОБЪЕКТОМ!
@@ -744,7 +759,6 @@ void CHero::move()
 
   rect.x = t.x;
   rect.y = t.y;
-
 }
 
 
@@ -758,6 +772,10 @@ void CSpace::create_hero()
 
   hero->rect.x = level->start_x;
   hero->rect.y = level->start_y;
+
+  cout << "hero->rect.x: " << hero->rect.x << endl;
+  cout << "hero->rect.y: " << hero->rect.y << endl;
+
 
   cout << "CSpace::create_hero() = ok" << endl;
 }
