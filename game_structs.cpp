@@ -1055,7 +1055,14 @@ void CSpace::render_space()
 //рисуем героя
   hero->move();
 
-  CSprite *sprite = hero->sprites[(int)hero->dir_x]; //FIXME: ИСПОЛЬЗОВАТЬ ТЕКУЩЕЕ DIRECTION
+  EDirection dir;          
+  if (hero->dir_x == EDirection_None && hero->dir_y != EDirection_None)
+             dir = hero->dir_y;
+          else
+              dir = hero->dir_x; 
+
+//  CSprite *sprite = hero->sprites[(int)hero->dir_y]; //FIXME: ИСПОЛЬЗОВАТЬ ТЕКУЩЕЕ DIRECTION
+  CSprite *sprite = hero->sprites[(int)dir]; //FIXME: ИСПОЛЬЗОВАТЬ ТЕКУЩЕЕ DIRECTION
 
   SDL_Texture *im = sprite->images[sprite->get_current_frame_number()];
   if (im)
@@ -1067,7 +1074,13 @@ void CSpace::render_space()
       CGameObject *obj = level->game_objects[i];
       if (obj)
          {
-          CSprite *sprite = obj->sprites[(int)obj->dir_x]; //FIXME: ИСПОЛЬЗОВАТЬ ТЕКУЩЕЕ DIRECTION
+//          EDirection dir;          
+          if (obj->dir_x == EDirection_None && obj->dir_y != EDirection_None)
+             dir = obj->dir_y;
+          else
+              dir = obj->dir_x; 
+
+          CSprite *sprite = obj->sprites[(int)dir];
           SDL_Texture *im = sprite->images[sprite->get_current_frame_number()];
           if (im)
               SDL_RenderCopy (renderer, im, 0, &obj->rect);

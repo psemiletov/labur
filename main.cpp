@@ -312,7 +312,7 @@ int main (int argc, char *argv[])
                                 else if(keyevent.jaxis.value > JOYSTICK_DEAD_ZONE )
                                                space->hero->dir_y = EDirection_Down;
                                 else
-                                        space->hero->dir_y = EDirection_None;
+                                    space->hero->dir_y = EDirection_None;
                             }
 
 
@@ -337,6 +337,7 @@ int main (int argc, char *argv[])
 
                                   case SDLK_UP:
                                                space->hero->dir_y = EDirection_Up;
+//                                               cout << "space->hero->dir_y = EDirection_Up" << endl;
                                               // space->level->bglayers->set_directions (EDirection_Right, EDirection_Up);
                                                break;
 
@@ -376,12 +377,10 @@ int main (int argc, char *argv[])
 
                                             case SDLK_UP:
                                                          space->hero->dir_y = EDirection_None;
-                                                  //       space->level->bglayers->set_directions (EDirection_Right, EDirection_None);
                                                          break;
 
                                             case SDLK_DOWN:
                                                            space->hero->dir_y = EDirection_None;
-                                                    //       space->level->bglayers->set_directions (EDirection_Right, EDirection_None);
                                                            break;
 
                                             default:
